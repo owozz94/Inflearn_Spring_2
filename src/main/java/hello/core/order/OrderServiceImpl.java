@@ -10,12 +10,16 @@ import hello.core.discount.FIxDisountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderServiceImpl implements OrderService {
     //철저하게 DIP를 지키고있다.
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
     //대본보듯 이 로직만 실행하면됨.
+    @Autowired
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
@@ -25,5 +29,9 @@ public class OrderServiceImpl implements OrderService {
         Member member = this.memberRepository.findById(memberId);
         int discountPrice = this.discountPolicy.discount(member, itemPrice);
         return new Order(memberId, itemName, itemPrice, discountPrice);
+    }
+
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
     }
 }
